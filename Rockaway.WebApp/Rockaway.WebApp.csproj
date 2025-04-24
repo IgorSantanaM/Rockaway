@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
@@ -21,6 +21,7 @@
 	  <None Remove="Data\Sample\firstnames.txt" />
 	  <None Remove="Data\Sample\guids.txt" />
 	  <None Remove="Data\Sample\surnames.txt" />
+	  <None Remove="Templates\Mail\OrderConfirmation.csmjml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,21 +34,25 @@
 	  <EmbeddedResource Include="Data\Sample\surnames.txt">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	  <EmbeddedResource Include="Templates\Mail\OrderConfirmation.csmjml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
+		<PackageReference Include="mjml.net" Version="4.8.0" />
 		<PackageReference Include="NodaTime" Version="3.2.2" />
+		<PackageReference Include="RazorEngine" Version="3.10.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
 		<PackageReference Include="SixLabors.ImageSharp.Web" Version="3.1.4" />
 	</ItemGroup>
