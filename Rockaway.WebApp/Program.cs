@@ -4,6 +4,9 @@ using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Components;
 using SixLabors.ImageSharp.Web.DependencyInjection;
+using Rockaway.WebApp.Services.Mail;
+using RazorEngine.Templating;
+using Mjml.Net;
 
 var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Program>();
 
@@ -44,6 +47,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<Roc
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddImageSharp();
+
+builder.Services.AddSingleton<ITextMailRenderer>(new StringBuilderTextMailRenderer());
+
+builder.Services.AddSingleton(_ => RazorEngineService.Create());
+builder.Services.AddSingleton<IMailTemplateProvider>(new EmbeddedResourceMailTemplateProvider());
+builder.Services.AddSingleton<IMjmlRenderer>(_ => new MjmlRenderer());
+builder.Services.AddSingleton<IHtmlMailRenderer, RazorEngineMjmlMailRenderer>();
 
 var app = builder.Build();
 
