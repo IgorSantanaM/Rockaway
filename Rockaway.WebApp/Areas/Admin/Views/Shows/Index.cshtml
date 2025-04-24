@@ -1,0 +1,36 @@
+@model Rockaway.WebApp.Areas.Admin.Models.ShowListViewData
+
+@{
+	ViewData["Title"] = "Index";
+}
+<h1>Show Calendar</h1>
+<div class="calendar">
+	<div class="header">Mon</div>
+	<div class="header">Tue</div>
+	<div class="header">Wed</div>
+	<div class="header">Thu</div>
+	<div class="header">Fri</div>
+	<div class="header">Sat</div>
+	<div class="header">Sun</div>
+	@foreach (var date in Model.Calendar)
+	{
+		<div class="date">
+			@date.ToString("dd MMM", CultureInfo.InvariantCulture)
+			@foreach (var show in Model.GetShowsFor(date))
+			{
+				<div>
+					<a asp-action="View" asp-controller="Shows" asp-all-route-data="@show.RouteData">
+						<strong>@show.HeadlineArtist.Name</strong>
+						@if (show.SupportActNames.Any()) {
+							<br />
+							<span> + @String.Join(", ", show.SupportActNames)</span>
+						}
+						<br />
+						@show.VenueName, @show.DoorsOpen
+						<country-flag format="svg" iso-code="@show.CountryCode"></country-flag>
+					</a>
+				</div>
+			}
+		</div>
+	}
+</div>

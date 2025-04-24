@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Rockaway.WebApp.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Areas\Admin\Views\NewFolder\**" />
+	  <Content Remove="Areas\Admin\Views\NewFolder\**" />
+	  <EmbeddedResource Remove="Areas\Admin\Views\NewFolder\**" />
+	  <None Remove="Areas\Admin\Views\NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Data\Sample\firstnames.txt" />
+	  <None Remove="Data\Sample\guids.txt" />
+	  <None Remove="Data\Sample\surnames.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Data\Sample\firstnames.txt">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Data\Sample\guids.txt">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Data\Sample\surnames.txt">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+		<PackageReference Include="NodaTime" Version="3.2.2" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+		<PackageReference Include="SixLabors.ImageSharp.Web" Version="3.1.4" />
+	</ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Rockaway.WebApp.Tests" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="wwwroot\images\artists\" />
+	</ItemGroup>
+
+</Project>

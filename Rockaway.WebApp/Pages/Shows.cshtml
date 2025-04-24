@@ -1,0 +1,9 @@
+@page
+@model ShowsModel
+<article class="show-calendar">
+	@foreach (var show in Model.Shows) {
+		<section>
+			@Html.DisplayFor(_ => show)
+		</section>
+	}
+</article>
