@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Rockaway.WebApp.Models.ShowViewData
+
+<div class="show-card" style="background-image: url(@Model.HeadlineArtist.GetImageUrl(300, 200))">
+	<h4>@Model.HeadlineArtist.Name</h4>
+	<p>@Model.VenueName, @Model.VenueAddress</p>
+	@if(Model.SupportActNames.Count >0) {
+		<p>Support: @String.Join(", ", Model.SupportActNames)</p>
+	}
+	<p>@Model.ShowDate</p>
+	<p><strong>Tickets:</strong>
+		@String.Join(" / ", Model.TicketTypes.Select(t => $"{t.Price}"));
+		}
+	</p>
+	<a class="btn btn-primary"
+	   asp-action="Show"
+	   asp-controller="Tickets"
+	   asp-all-route-data="@Model.RouteData">tickets</a>
+
+</div>

@@ -1,0 +1,62 @@
+@using Rockaway.WebApp.Data
+@model Rockaway.WebApp.Models.ShowViewData
+
+@{
+	ViewBag.Title = Model.HeadlineArtist.Name;
+}
+<p>
+	<strong><a asp-controller="Artists" asp-action="Details" asp-route-id="@Model.HeadlineArtist.Id">
+			@Model.HeadlineArtist.Name</a>
+	</strong>
+	live at 
+	<strong>@Model.VenueName</strong>, @Model.VenueAddress, @Country.FromCode(Model.CountryCode).Name
+</p>
+<p>@Model.ShowDate.ToString("dddd dd MMMM yyyy", CultureInfo.InvariantCulture)</p>
+<p>
+	
+</p>
+@if (Model.SupportActNames.Any()) {
+	<p>
+		Support acts:
+		@foreach (var act in Model.SupportActs) {
+			<a asp-controller="Artists" asp-action="Details" asp-route-id="@act.Id">@act.Name</a>
+		}
+	</p>
+}
+<table class="table table-sm small table-striped">
+	<thead>
+	<tr>
+		<th>Order ID</th>
+		<th>Customer</th>
+		<th>Tickets</th>
+		<th>Total</th>
+		<th>Order Placed (UTC)</th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model.TicketOrders) {
+		<tr>
+			<td>
+				<a asp-action="Details" asp-controller="TicketOrders" asp-route-id="@item.OrderId">
+					@item.OrderReference
+				</a>
+			</td>
+			<td>
+				@item.CustomerName<br />
+				&lt;@item.CustomerEmail&gt;
+			</td>
+			<td>
+				@foreach (var thing in item.Contents) {
+					@thing.QuantityAndType
+					<text> @@ </text>
+					@thing.UnitPrice<br />
+				}
+			</td>
+			<td>@item.FormattedTotalPrice</td>
+			<td>
+				@item.FormattedOrderCompletedAt
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

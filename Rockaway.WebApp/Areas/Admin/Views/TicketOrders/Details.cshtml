@@ -1,0 +1,44 @@
+@model Rockaway.WebApp.Models.TicketOrderViewData
+
+<h1>Order # @Model.OrderReference</h1>
+<hr />
+<section class="labelled-field-list">
+	<label for="headliner">Headliner</label>
+	<span id="headliner">@Model.Headliner</span>
+	<label for="support">Support</label>
+	<span id="support">@Model.SupportArtistsText</span>
+	<label for="venue">Venue</label>
+	<span id="venue">@Model.VenueSummary</span>
+	<label for="show-date">Show Date</label>
+	<span id="show-date">@Model.ShowDate</span>
+	<hr />
+	<label for="customer-name">Customer</label>
+	<span id="customer-name">@Model.CustomerName</span>
+	<label for="customer-email">Email</label>
+	<span id="customer-email">@Model.CustomerEmail</span>
+	<label for="order-placed">Order Placed</label>
+	<span id="order-placed">@Model.FormattedOrderCompletedAt<small>UTC</small></span>
+	<hr />
+	<label for="order-contents">Tickets</label>
+	<span id="order-contents">
+		@foreach (var item in Model.Contents) {
+			@item.QuantityAndType
+			<text> @@ </text>
+			@item.UnitPrice<br />
+		}
+	</span>
+	<label for="total-value">Total Cost</label>
+	<span id="total-value">@Model.FormattedTotalPrice</span>
+	<hr />
+	<label for="emails">Order Email</label>
+	<div id="emails">
+		<a asp-controller="Emails" asp-action="Html" asp-route-id="@Model.OrderId">HTML</a>
+		&bull;
+		<a asp-controller="Emails" asp-action="Text" asp-route-id="@Model.OrderId">text</a>
+		&bull;
+		<a href="#">PDF</a>
+		<br />
+	</div>
+	<hr />
+</section>
+<a href="#" class="btn btn-primary">Resend Order Email...</a>

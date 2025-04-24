@@ -1,0 +1,34 @@
+@page "/venue/{slug}"
+@using Rockaway.WebApp.Data
+@model Rockaway.WebApp.Pages.VenueModel
+<h1>@Model.Venue.Name</h1>
+<p>@Model.Venue.FullAddress, @Country.FromCode(Model.Venue.CountryCode).Name</p>
+@if (Model.Shows.Any())
+{
+	<h3>Upcoming Shows</h3>
+	@foreach (var show in Model.Shows) {
+		<hr />
+		<div class="row">
+			<div class="col-12 col-md-3">@show.ShowDate</div>
+			<div class="col-12 col-md-4">
+				<h4>@show.HeadlineArtist.Name</h4>
+				@if (show.SupportActNames.Any()) {
+					<em> + support: @String.Join(", ", show.SupportActNames)</em>
+				}
+			</div>
+			<div class="col-8 col-md-3">
+				Tickets: @String.Join(" / ", show.TicketTypes.OrderByDescending(tt => tt.Price).Select(tt => tt.FormattedPrice))
+			</div>
+			<div class="col-md-2 col-4 text-end">
+				<a class="btn btn-primary buy-tickets"
+				   asp-action="show"
+				   asp-controller="tickets"
+				   asp-all-route-data="@show.RouteData">Buy Tickets</a>
+			</div>
+		</div>
+	}
+}
+else
+{
+	<p>No shows scheduled.</p>
+}

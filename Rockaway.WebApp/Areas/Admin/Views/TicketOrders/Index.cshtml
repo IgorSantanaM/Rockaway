@@ -1,0 +1,56 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Rockaway.WebApp.Data.Entities
+@model Rockaway.WebApp.Areas.Admin.Models.TicketOrdersViewData
+@{
+	ViewData["Title"] = "Index";
+}
+
+<form asp-action="Index" method="get" style="float: right;">
+	<input type="text" placeholder="search..." name="search" value="@Model.Search" />
+	<input type="submit" value="Search" />
+</form>
+<h1>Ticket Orders</h1>
+<table class="table table-sm small table-striped">
+	<thead>
+	<tr>
+		<th style="width: 10%">
+			Order ID <search-result-sorter results="@Model" order-by="@nameof(TicketOrder.Id)" />
+		</th>
+		<th style="width: 40%">
+			Customer <search-result-sorter results="@Model" order-by="@nameof(TicketOrder.CustomerName)" />
+		</th>
+		<th style="width: 30%">
+			Show <search-result-sorter results="@Model" order-by="@nameof(TicketOrder.Show)" />
+		</th>
+		<th style="width: 20%" class="date">
+			Order Placed (UTC)&nbsp;<search-result-sorter results="@Model" order-by="@nameof(TicketOrder.CompletedAt)" />
+		</th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model.Orders) {
+		<tr>
+			<td class="order-id">
+				<a asp-action="Details" asp-controller="TicketOrders" asp-route-id="@item.OrderId">
+					@item.OrderReference
+				</a>
+			</td>
+			<td>
+				@item.CustomerName<br />&lt;@item.CustomerEmail&gt;
+			</td>
+			<td>
+				<strong>@item.Headliner</strong>
+				<br /> @item.VenueName, @item.ShowDate
+			</td>
+		 	<td class="date">
+				@item.FormattedOrderCompletedAt
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>
+@if (Model.Count > 0) {
+	<p>Showing @(Model.Index + 1) to @(Model.Index + Model.Count) of @Model.Total orders.</p>
+} else {
+	<p>No matching orders found.</p>
+}

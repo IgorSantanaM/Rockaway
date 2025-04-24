@@ -1,0 +1,84 @@
+@import '../lib/fontawesome/scss/fontawesome.scss';
+@import '../lib/fontawesome/scss/solid.scss';
+@import '../lib/fontawesome/scss/brands.scss';
+
+table.table {
+	tr {
+		th {
+			white-space: nowrap;
+
+			a.fa-solid {
+				color: #ccc;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.order-id {
+		font-family: monospace;
+	}
+
+	.date, .money {
+		text-align: right;
+	}
+}
+
+.labelled-field-list {
+	display: grid;
+	grid-template-columns: 8em 1fr;
+	gap: 4px;
+
+	label {
+		font-weight: bold;
+
+		&::after {
+			content: ':';
+		}
+	}
+
+	hr {
+		grid-column: 1 / -1;
+	}
+}
+
+div.calendar {
+	border: 2px solid #333;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 2px;
+	background-color: #333;
+
+	> div {
+		background-color: #fff;
+		font-size: 0.7em;
+		padding: 4px;
+
+		&.header {
+			font-weight: bold;
+		}
+
+		&.date {
+			min-height: 20em;
+
+			> div {
+				a {
+					color: #000;
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+
+				padding: 2px 0;
+				border-top: 1px solid #999;
+
+				img.country-flag {
+					width: 20px;
+					height: 15px;
+					float: right;
+				}
+			}
+		}
+	}
+}
