@@ -9,7 +9,8 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 	public class EmailsController(
 		RockawayDbContext db,
 		ITextMailRenderer textMailRenderer,
-		IHtmlMailRenderer htmlMailRenderer) : Controller {
+		IHtmlMailRenderer htmlMailRenderer,
+		IPdfMaker pdfMaker) : Controller {
 
 		public async Task<IActionResult> Text(Guid id) {
 			var order = await FindTicketOrder(id);
@@ -20,6 +21,13 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 		}
 
 		public async Task<IActionResult> Html(Guid id) {
+			var order = await FindTicketOrder(id);
+			if (order == null) return NotFound();
+			var data = new TicketOrderMailData(order, Request.GetWebsiteBaseUri());
+			var html = htmlMailRenderer.RenderHtmlEmail(data);
+			return Content(html, "text/html", Encoding.UTF8);
+		}
+		public async Task<IActionResult> Pdf(Guid id) {
 			var order = await FindTicketOrder(id);
 			if (order == null) return NotFound();
 			var data = new TicketOrderMailData(order, Request.GetWebsiteBaseUri());

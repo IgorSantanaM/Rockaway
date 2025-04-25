@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -21,6 +21,8 @@
 	  <None Remove="Data\Sample\firstnames.txt" />
 	  <None Remove="Data\Sample\guids.txt" />
 	  <None Remove="Data\Sample\surnames.txt" />
+	  <None Remove="Services\Mail\Resources\PTSansNarrow-Regular.ttf" />
+	  <None Remove="Services\Mail\Resources\rockaway-logotype.svg" />
 	  <None Remove="Templates\Mail\OrderConfirmation.csmjml" />
 	</ItemGroup>
 
@@ -34,6 +36,8 @@
 	  <EmbeddedResource Include="Data\Sample\surnames.txt">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	  <EmbeddedResource Include="Services\Mail\Resources\PTSansNarrow-Regular.ttf" />
+	  <EmbeddedResource Include="Services\Mail\Resources\rockaway-logotype.svg" />
 	  <EmbeddedResource Include="Templates\Mail\OrderConfirmation.csmjml" />
 	</ItemGroup>
 
@@ -52,7 +56,8 @@
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
 		<PackageReference Include="mjml.net" Version="4.8.0" />
 		<PackageReference Include="NodaTime" Version="3.2.2" />
-		<PackageReference Include="RazorEngine" Version="3.10.0" />
+		<PackageReference Include="questpdf" Version="2025.4.0" />
+		<PackageReference Include="RazorEngine.NetCore" Version="3.1.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
 		<PackageReference Include="SixLabors.ImageSharp.Web" Version="3.1.4" />
 	</ItemGroup>
