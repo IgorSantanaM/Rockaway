@@ -63,6 +63,7 @@ public class RockawayDbContext(DbContextOptions<RockawayDbContext> options)
 		modelBuilder.Entity<TicketOrder>(entity => {
 			entity.Property(o => o.CustomerName).HasMaxLength(100);
 			entity.Property(o => o.CustomerEmail).HasMaxLength(250);
+			entity.Property(o => o.MailError).HasMaxLength(250);
 		});
 
 		modelBuilder.Entity<TicketType>(entity => {

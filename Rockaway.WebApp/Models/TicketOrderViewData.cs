@@ -18,6 +18,15 @@ public class TicketOrderViewData(TicketOrder ticketOrder) {
 
 	public ZonedDateTime? OrderCompletedAt { get; } = ticketOrder.CompletedAt?.InZone(DateTimeZone.Utc);
 
+	public ZonedDateTime? MailSentAt { get; } = ticketOrder.MailSentAt?.InZone(DateTimeZone.Utc);
+	public string? MailError { get; } = ticketOrder.MailError;
+
+	public string FormattedMailSentAt => MailSentAt?.ToString("ddd dd MMM yyyy HH:mm", CultureInfo.InvariantCulture) ?? "(not yet)";
+
+	public bool MailSent => MailSentAt.HasValue;
+
+	public bool HasMailError => !string.IsNullOrEmpty(MailError);
+
 	public string FormattedOrderCompletedAt
 		=> OrderCompletedAt?.ToString("ddd dd MMM yyyy HH:mm", CultureInfo.InvariantCulture) ?? "(not yet)";
 

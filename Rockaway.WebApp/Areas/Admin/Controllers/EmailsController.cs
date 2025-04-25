@@ -31,8 +31,8 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 			var order = await FindTicketOrder(id);
 			if (order == null) return NotFound();
 			var data = new TicketOrderMailData(order, Request.GetWebsiteBaseUri());
-			var html = htmlMailRenderer.RenderHtmlEmail(data);
-			return Content(html, "text/html", Encoding.UTF8);
+			var pdfBytes = pdfMaker.CreatePdfTickets(data);
+			return File(pdfBytes, "application/pdf");
 		}
 
 		private async Task<TicketOrder?> FindTicketOrder(Guid id) {

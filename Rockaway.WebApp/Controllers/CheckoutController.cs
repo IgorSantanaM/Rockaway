@@ -1,10 +1,15 @@
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Data.Entities;
 using Rockaway.WebApp.Models;
+using Rockaway.WebApp.Services;
+using Rockaway.WebApp.Services.Mail;
 
 namespace Rockaway.WebApp.Controllers;
 
-public class CheckoutController(RockawayDbContext db, IClock clock) : Controller {
+public class CheckoutController(
+	RockawayDbContext db,
+	IClock clock,
+	ITicketMailer mailer) : Controller {
 
 	[HttpPost]
 	public async Task<IActionResult> Confirm(Guid id, OrderConfirmationPostData post) {
@@ -17,7 +22,20 @@ public class CheckoutController(RockawayDbContext db, IClock clock) : Controller
 		ticketOrder.CustomerName = post.CustomerName;
 		ticketOrder.CompletedAt = clock.GetCurrentInstant();
 		await db.SaveChangesAsync();
-		return Content("TODO: send ticket by email");
+
+		var mailData = new TicketOrderMailData(ticketOrder, Request.GetWebsiteBaseUri());
+		await mailer.SendOrderConfirmationAsync(mailData);
+		try {
+			await mailer.SendOrderConfirmationAsync(mailData);
+			ticketOrder.MailSentAt = clock.GetCurrentInstant();
+		}
+		catch(Exception ex) {
+			ticketOrder.MailError = ex.Message; 
+		}
+		finally {
+			await db.SaveChangesAsync();
+		}
+		return RedirectToAction(nameof(Completed), new { id = ticketOrder.Id });
 	}
 
 	[HttpGet]
