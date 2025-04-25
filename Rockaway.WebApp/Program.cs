@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Web.DependencyInjection;
 using Rockaway.WebApp.Services.Mail;
 using RazorEngine.Templating;
 using Mjml.Net;
+using QRCoder;
 
 var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Program>();
 
@@ -54,6 +55,14 @@ builder.Services.AddSingleton(_ => RazorEngineService.Create());
 builder.Services.AddSingleton<IMailTemplateProvider>(new EmbeddedResourceMailTemplateProvider());
 builder.Services.AddSingleton<IMjmlRenderer>(_ => new MjmlRenderer());
 builder.Services.AddSingleton<IHtmlMailRenderer, RazorEngineMjmlMailRenderer>();
+builder.Services.AddSingleton<QRCodeGenerator>();
+builder.Services.AddSingleton<IPdfMaker, PdfMaker>();
+
+var smtpSettings = builder.Configuration.GetSection("Smtp").Get<SmtpSettings>() ?? new SmtpSettings();
+
+builder.Services.AddSingleton(smtpSettings);
+builder.Services.AddTransient<IMailSender, SmtpMailSender>();
+builder.Services.AddTransient<ITicketMailer, TicketMailer>();
 
 var app = builder.Build();
 

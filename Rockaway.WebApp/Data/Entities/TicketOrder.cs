@@ -15,6 +15,9 @@ public class TicketOrder {
 	public Instant CreatedAt { get; set; }
 	public Instant? CompletedAt { get; set; }
 
+	public Instant? MailSentAt { get; set; }
+
+	public string? MailError { get; set; } = null!; 
 	public string FormattedTotalPrice
 		=> Show.Venue.FormatPrice(Tickets.Sum(item => item.TicketType.Price));
 

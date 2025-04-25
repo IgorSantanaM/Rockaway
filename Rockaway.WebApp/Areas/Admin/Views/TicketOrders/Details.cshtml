@@ -3,42 +3,72 @@
 <h1>Order # @Model.OrderReference</h1>
 <hr />
 <section class="labelled-field-list">
-	<label for="headliner">Headliner</label>
-	<span id="headliner">@Model.Headliner</span>
-	<label for="support">Support</label>
-	<span id="support">@Model.SupportArtistsText</span>
-	<label for="venue">Venue</label>
-	<span id="venue">@Model.VenueSummary</span>
-	<label for="show-date">Show Date</label>
-	<span id="show-date">@Model.ShowDate</span>
-	<hr />
-	<label for="customer-name">Customer</label>
-	<span id="customer-name">@Model.CustomerName</span>
-	<label for="customer-email">Email</label>
-	<span id="customer-email">@Model.CustomerEmail</span>
-	<label for="order-placed">Order Placed</label>
-	<span id="order-placed">@Model.FormattedOrderCompletedAt<small>UTC</small></span>
-	<hr />
-	<label for="order-contents">Tickets</label>
-	<span id="order-contents">
-		@foreach (var item in Model.Contents) {
-			@item.QuantityAndType
-			<text> @@ </text>
-			@item.UnitPrice<br />
-		}
-	</span>
-	<label for="total-value">Total Cost</label>
-	<span id="total-value">@Model.FormattedTotalPrice</span>
-	<hr />
-	<label for="emails">Order Email</label>
-	<div id="emails">
-		<a asp-controller="Emails" asp-action="Html" asp-route-id="@Model.OrderId">HTML</a>
-		&bull;
-		<a asp-controller="Emails" asp-action="Text" asp-route-id="@Model.OrderId">text</a>
-		&bull;
-		<a href="#">PDF</a>
-		<br />
-	</div>
-	<hr />
+    <label for="headliner">Headliner</label>
+    <span id="headliner">@Model.Headliner</span>
+    <label for="support">Support</label>
+    <span id="support">@Model.SupportArtistsText</span>
+    <label for="venue">Venue</label>
+    <span id="venue">@Model.VenueSummary</span>
+    <label for="show-date">Show Date</label>
+    <span id="show-date">@Model.ShowDate</span>
+    <hr />
+    <label for="customer-name">Customer</label>
+    <span id="customer-name">@Model.CustomerName</span>
+    <label for="customer-email">Email</label>
+    <span id="customer-email">@Model.CustomerEmail</span>
+    <label for="order-placed">Order Placed</label>
+    <span id="order-placed">@Model.FormattedOrderCompletedAt<small>UTC</small></span>
+
+    <label for="order-status">Order Status</label>
+    @if (Model.MailSent)
+    {
+        <spann id="order-status" class="text-success">
+            <i class="fa-solid fa-circle-check"></i>
+            Tickets sent at @Model.FormattedMailSentAt <small>UTC</small>
+        </spann>
+    }
+    else if (Model.HasMailError)
+    {
+        <span id="order-status" class="text-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Error sending tickets: @Model.MailError
+        </span>
+    }
+    else
+    {
+        <span id="order-status">(email not sent)</span>
+    }
+    <hr />
+    <label for="order-contents">Tickets</label>
+    <span id="order-contents">
+        @foreach (var item in Model.Contents)
+        {
+            @item.QuantityAndType
+            <text> @@ </text>
+            @item.UnitPrice
+
+            <br />
+        }
+    </span>
+    <label for="total-value">Total Cost</label>
+    <span id="total-value">@Model.FormattedTotalPrice</span>
+    <hr />
+    <label for="emails">Order Email</label>
+    <div id="emails">
+        <a asp-controller="Emails" asp-action="Html" asp-route-id="@Model.OrderId">HTML</a>
+        &bull;
+        <a asp-controller="Emails" asp-action="Text" asp-route-id="@Model.OrderId">text</a>
+        &bull;
+        <a asp-controller="Emails" asp-action="Pdf" asp-route-id="@Model.OrderId">Pdf</a>
+        &bull;
+        <br />
+    </div>
+    <hr />
 </section>
-<a href="#" class="btn btn-primary">Resend Order Email...</a>
+<form asp-action="Resend" method="post">
+    <input type="hidden" asp-for="@Model.OrderId" />
+    <button class="btn btn-primary spin-on-click">
+        <i class="fa-solid fa-rotate-right"></i>
+        Resend Order Email...
+    </button>
+</form>

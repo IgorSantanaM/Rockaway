@@ -43,6 +43,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
+		<PackageReference Include="MailKit" Version="4.11.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
@@ -54,8 +55,10 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
+		<PackageReference Include="MimeKit" Version="4.11.0" />
 		<PackageReference Include="mjml.net" Version="4.8.0" />
 		<PackageReference Include="NodaTime" Version="3.2.2" />
+		<PackageReference Include="QRCoder" Version="1.6.0" />
 		<PackageReference Include="questpdf" Version="2025.4.0" />
 		<PackageReference Include="RazorEngine.NetCore" Version="3.1.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
