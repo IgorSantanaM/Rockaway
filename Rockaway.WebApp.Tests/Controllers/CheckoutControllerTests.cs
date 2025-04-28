@@ -6,6 +6,7 @@ using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Data.Entities;
 using Rockaway.WebApp.Data.Sample;
 using Rockaway.WebApp.Models;
+using Rockaway.WebApp.Tests.Mail;
 
 namespace Rockaway.WebApp.Tests.Controllers;
 
@@ -17,7 +18,7 @@ public class CheckoutControllerTests {
 
 	public CheckoutControllerTests() {
 		this.db = TestDatabase.Create();
-		this.controller = new(db, clock);
+		this.controller = new CheckoutController(db, clock, new FakeTicketMailer()).WithRequestUrl("https://rockaway.dev");
 	}
 
 	private async Task<TicketOrder> CreateTestOrderAsync() {

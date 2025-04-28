@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using NodaTime.Testing;
 using Rockaway.WebApp.Areas.Admin.Controllers;
 using Rockaway.WebApp.Areas.Admin.Models;
 using Rockaway.WebApp.Data;
+using Rockaway.WebApp.Data.Sample;
+using Rockaway.WebApp.Tests.Mail;
+using System.Diagnostics;
 
 namespace Rockaway.WebApp.Tests.Areas.Admin;
 
@@ -9,9 +13,10 @@ public class TicketOrdersControllerTests {
 
 	private readonly RockawayDbContext db = TestDatabase.Create();
 	private readonly TicketOrdersController controller;
+	private readonly FakeClock clock = new(SampleData.NOW);
 
 	public TicketOrdersControllerTests() {
-		this.controller = new(db);
+		this.controller = new(db, new FakeTicketMailer(),clock);
 	}
 
 	[Fact]
