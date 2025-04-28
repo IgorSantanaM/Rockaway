@@ -1,0 +1,25 @@
+Hey Test Customer,
+
+Great news - you're going to see Coda!
+
+Order Reference: ACDC1234
+
+Your order details are below.
+
+Coda
++ special guests: 
+Alter Column
+Venue: New Cross Inn, New Cross Inn, 323 New Cross Road, London, SE14 6AS, United Kingdom
+Date: terça-feira, 18 fevereiro 2025, doors 19:00
+
+Your tickets are attached to this email:
+
+2   x Standing                                                    £30.00
+
+Total:                                                            £60.00
+
+Any questions or problems with your order, just reply to this email.
+
+Enjoy the show!
+
+rockaway: gig tickets for good people.

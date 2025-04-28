@@ -97,6 +97,7 @@ public class PdfMaker(QRCodeGenerator qrCodeGenerator) : IPdfMaker {
 	}
 
 	public byte[] CreatePdfTickets(TicketOrderMailData data) {
+		var now = data.OrderCompletedAt?.ToDateTimeOffset() ?? DateTimeOffset.UtcNow;
 		var pdf = Document.Create(container => {
 			container.Page(page => {
 				page.Size(PageSizes.A4);
@@ -108,6 +109,9 @@ public class PdfMaker(QRCodeGenerator qrCodeGenerator) : IPdfMaker {
 					}
 				});
 			});
+		}).WithMetadata(new DocumentMetadata {
+			CreationDate = now,
+			ModifiedDate = now
 		});
 		return pdf.GeneratePdf();
 	}
