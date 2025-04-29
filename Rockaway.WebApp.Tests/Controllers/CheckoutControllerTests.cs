@@ -16,9 +16,15 @@ public class CheckoutControllerTests {
 	private readonly CheckoutController controller;
 	private readonly FakeClock clock = new(SampleData.NOW);
 
+	private readonly FakeMailSender fakeMailSender = new();
+
 	public CheckoutControllerTests() {
 		this.db = TestDatabase.Create();
-		this.controller = new CheckoutController(db, clock, new FakeTicketMailer()).WithRequestUrl("https://rockaway.dev");
+
+		var ticketMailer = fakeMailSender.CreateTikcetMailer();
+
+		this.controller = new CheckoutController(db, clock, ticketMailer)
+			.WithRequestUrl("https://rockaway.dev");
 	}
 
 	private async Task<TicketOrder> CreateTestOrderAsync() {
@@ -29,6 +35,34 @@ public class CheckoutControllerTests {
 		await db.TicketOrders.AddAsync(order);
 		await db.SaveChangesAsync();
 		return order;
+	}
+
+	private async Task<TicketOrder> CreateAndConfirmTestOrderAsync(string name = "Test Customer", string email = "test@example.com") {
+		var order = await CreateTestOrderAsync();
+		var post = new OrderConfirmationPostData {
+			TicketOrderId = order.Id,
+			CustomerEmail = email,
+			AgreeToPayment = true,
+			CustomerName = name
+		};
+		await controller.Confirm(post.TicketOrderId, post);
+		return order;
+	}
+
+	[Fact]
+	public async Task POST_Confirm_Sends_Tickets_By_Email() {
+		fakeMailSender.Messages.ShouldBeEmpty();
+		await CreateAndConfirmTestOrderAsync();
+		fakeMailSender.Messages.Count.ShouldBe(1);
+	}
+
+	[Fact]
+	public async Task POST_Confirm_Updates_Database_After_Sending_Email() {
+		var order = await CreateAndConfirmTestOrderAsync();
+		var db2 = TestDatabase.Connect(this.db.GetSqliteDbName());
+		var order2 = await db2.TicketOrders.FindAsync(order.Id);
+		order2.ShouldNotBeNull();
+		order2.MailSentAt.ShouldBe(clock.GetCurrentInstant());
 	}
 
 	[Fact]
