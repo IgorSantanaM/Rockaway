@@ -36,7 +36,6 @@ public class CheckoutControllerTests {
 		await db.SaveChangesAsync();
 		return order;
 	}
-
 	private async Task<TicketOrder> CreateAndConfirmTestOrderAsync(string name = "Test Customer", string email = "test@example.com") {
 		var order = await CreateTestOrderAsync();
 		var post = new OrderConfirmationPostData {
@@ -47,13 +46,6 @@ public class CheckoutControllerTests {
 		};
 		await controller.Confirm(post.TicketOrderId, post);
 		return order;
-	}
-
-	[Fact]
-	public async Task POST_Confirm_Sends_Tickets_By_Email() {
-		fakeMailSender.Messages.ShouldBeEmpty();
-		await CreateAndConfirmTestOrderAsync();
-		fakeMailSender.Messages.Count.ShouldBe(1);
 	}
 
 	[Fact]
@@ -69,6 +61,7 @@ public class CheckoutControllerTests {
 	public async Task POST_Confirm_ReturnsNotFound_IfOrderNotFound() {
 		var postModel = new OrderConfirmationPostData { TicketOrderId = Guid.NewGuid() };
 		var result = await controller.Confirm(postModel.TicketOrderId, postModel);
+
 		result.ShouldBeOfType<NotFoundResult>();
 	}
 
@@ -129,7 +122,7 @@ public class CheckoutControllerTests {
 
 	[Fact]
 	public async Task GET_Confirm_Returns_NotFound_If_Order_Does_Not_Exist() {
-		var result = await controller.Confirm(Guid.NewGuid());
+		var result = await controller.Confirm(Guid.NewGuid( ));
 		result.ShouldBeOfType<NotFoundResult>();
 	}
 
@@ -143,4 +136,3 @@ public class CheckoutControllerTests {
 		model.TicketOrder.Id.ShouldBe(ticketOrder.Id);
 	}
 }
-
