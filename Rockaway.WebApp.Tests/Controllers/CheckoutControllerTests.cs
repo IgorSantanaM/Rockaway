@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
+using NodaTime;
 using NodaTime.Testing;
 using Rockaway.WebApp.Controllers;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Data.Entities;
 using Rockaway.WebApp.Data.Sample;
 using Rockaway.WebApp.Models;
+using Rockaway.WebApp.Services.Mail;
 using Rockaway.WebApp.Tests.Mail;
 
 namespace Rockaway.WebApp.Tests.Controllers;
@@ -15,6 +18,7 @@ public class CheckoutControllerTests {
 	private readonly RockawayDbContext db;
 	private readonly CheckoutController controller;
 	private readonly FakeClock clock = new(SampleData.NOW);
+	private readonly TicketMailerBackgroundService ticketMailerBackgroundService;
 
 	private readonly FakeMailSender fakeMailSender = new();
 
@@ -23,8 +27,24 @@ public class CheckoutControllerTests {
 
 		var ticketMailer = fakeMailSender.CreateTikcetMailer();
 
-		this.controller = new CheckoutController(db, clock, ticketMailer)
+		var services = new ServiceCollection();
+		services.AddTransient(_ => TestDatabase.Connect(this.db.GetSqliteDbName()));
+		services.AddSingleton<ITicketMailer>(ticketMailer);
+		services.AddSingleton<IClock>(clock);
+		var provider = services.BuildServiceProvider();
+
+		var logger = new NullLogger<TicketMailerBackgroundService>();
+
+		var queue = new TicketOrderMailQueue();
+
+		ticketMailerBackgroundService = new TicketMailerBackgroundService(queue, provider, logger);
+
+		this.controller = new CheckoutController(db, clock, queue)
 			.WithRequestUrl("https://rockaway.dev");
+	}
+	private async Task ProcessMailQueue(TimeSpan runningTime) {
+		var token = new CancellationTokenSource(runningTime).Token;
+		await ticketMailerBackgroundService.StartAsync(token);
 	}
 
 	private async Task<TicketOrder> CreateTestOrderAsync() {
@@ -51,6 +71,9 @@ public class CheckoutControllerTests {
 	[Fact]
 	public async Task POST_Confirm_Updates_Database_After_Sending_Email() {
 		var order = await CreateAndConfirmTestOrderAsync();
+
+		await ProcessMailQueue(TimeSpan.FromMilliseconds(100));
+
 		var db2 = TestDatabase.Connect(this.db.GetSqliteDbName());
 		var order2 = await db2.TicketOrders.FindAsync(order.Id);
 		order2.ShouldNotBeNull();
@@ -122,7 +145,7 @@ public class CheckoutControllerTests {
 
 	[Fact]
 	public async Task GET_Confirm_Returns_NotFound_If_Order_Does_Not_Exist() {
-		var result = await controller.Confirm(Guid.NewGuid( ));
+		var result = await controller.Confirm(Guid.NewGuid());
 		result.ShouldBeOfType<NotFoundResult>();
 	}
 

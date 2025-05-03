@@ -64,6 +64,9 @@ builder.Services.AddSingleton(smtpSettings);
 builder.Services.AddTransient<IMailSender, SmtpMailSender>();
 builder.Services.AddTransient<ITicketMailer, TicketMailer>();
 
+builder.Services.AddSingleton<IMailQueue, TicketOrderMailQueue>();
+builder.Services.AddHostedService<TicketMailerBackgroundService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsProduction()) {
