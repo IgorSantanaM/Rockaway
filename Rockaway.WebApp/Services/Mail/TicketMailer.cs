@@ -1,4 +1,4 @@
-﻿using MimeKit;
+using MimeKit;
 using Rockaway.WebApp.Models;
 
 namespace Rockaway.WebApp.Services.Mail {
