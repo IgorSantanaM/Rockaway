@@ -6,20 +6,20 @@ namespace Rockaway.WebApp.Services.Mail {
 	/// Producer
 	/// </summary>
 	public class TicketOrderMailQueue : IMailQueue {
-		private readonly Channel<TicketOrderMailData> channel;
+		private readonly Channel<TicketOrderMailItem> channel;
+
 		public TicketOrderMailQueue(int capacity = 100)
 		{
 			var options =  new BoundedChannelOptions(capacity) {
 				FullMode = BoundedChannelFullMode.Wait,
 			};
-			channel = Channel.CreateBounded<TicketOrderMailData>(options);
+			channel = Channel.CreateBounded<TicketOrderMailItem>(options);
 
 		}
-
-		public async Task AddMailToQueueAsync(TicketOrderMailData data) =>
+		public async Task AddMailToQueueAsync(TicketOrderMailItem data) =>
 			await channel.Writer.WriteAsync(data);
 
-		public async Task<TicketOrderMailData> FetchMailFromQueueAsync(CancellationToken token)
+		public async Task<TicketOrderMailItem> FetchMailFromQueueAsync(CancellationToken token)
 			=> await channel.Reader.ReadAsync(token);
 	}
 

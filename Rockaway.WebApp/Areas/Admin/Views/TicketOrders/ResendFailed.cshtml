@@ -1,0 +1,54 @@
+@model List<TicketOrder>
+<h1>Resend Failed Emails</h1>
+<div class="resend-failed-emails">
+
+    <div>
+        <label for="resend-emails-backlog">
+            Backlog
+            (<span class="count">@Model.Count</span>)
+        </label>
+        <input type="button"
+               class="btn btn-primary btn-sm float-end"
+               id="resend-emails-button" value="Send All" />
+    </div>
+    <ol id="resend-emails-backlog">
+        @foreach (var item in Model)
+        {
+            <li id="mail-item-@item.Id"
+                data-order-id="@item.Id">@item.CustomerEmail</li>
+        }
+    </ol>
+
+    <div>
+        <label for="resend-emails-pending">
+            Pending
+            (<span class="count">0</span>)
+        </label>
+    </div>
+    <ol id="resend-emails-pending">
+    </ol>
+
+
+    <div>
+        <label for="resend-emails-success">
+            Success
+            (<span class="count">0</span>)
+        </label>
+    </div>
+    <ol id="resend-emails-success">
+    </ol>
+
+    <div>
+        <label for="resend-emails-failure">
+            Failure
+            (<span class="count">0</span>)
+        </label>
+    </div>
+    <ol id="resend-emails-failure">
+    </ol>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/resend-emails.js" defer></script>
+}

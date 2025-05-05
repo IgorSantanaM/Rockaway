@@ -7,7 +7,8 @@ namespace Rockaway.WebApp.Services.Mail {
 		IMailSender sender,
 		IPdfMaker pdfMaker,
 		ILogger<TicketMailer> logger) : ITicketMailer {
-		public async Task SendOrderConfirmationAsync(TicketOrderMailData order) {
+
+		public MimeMessage CreateMessage(TicketOrderMailData order) {
 			var message = new MimeMessage();
 			message.From.Add(new MailboxAddress("Rockaway", "tickets@rockaway.dev"));
 			message.To.Add(new MailboxAddress(order.CustomerName, order.CustomerEmail));
@@ -21,9 +22,24 @@ namespace Rockaway.WebApp.Services.Mail {
 			var fileName = $"rockaway-tickets-{order.OrderReference}.pdf";
 			bb.Attachments.Add(fileName, pdfBytes, ContentType.Parse("application/pdf"));
 			message.Body = bb.ToMessageBody();
+			return message;
+		}
+		public async Task SendOrderConfirmationAsync(TicketOrderMailData order) {
+			var message = CreateMessage(order);
 
 			try {
 				await sender.SendAsync(message);
+			}
+			catch (Exception ex) {
+				logger.LogError(ex, "Error sending order confirmation email");
+				throw;
+			}
+		}
+		public async Task SendOrderConfirmationAsync(TicketOrderMailData order, CancellationToken token) {
+			var message = CreateMessage(order);
+
+			try {
+				await sender.SendAsync(message, token);
 			}
 			catch (Exception ex) {
 				logger.LogError(ex, "Error sending order confirmation email");

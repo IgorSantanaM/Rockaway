@@ -7,8 +7,7 @@ using Rockaway.WebApp.Services.Mail;
 namespace Rockaway.WebApp.Controllers;
 
 public class CheckoutController(
-	RockawayDbContext db,
-	IClock clock,
+	RockawayDbContext db, IClock clock,
 	IMailQueue queue) : Controller {
 
 	[HttpPost]
@@ -22,10 +21,8 @@ public class CheckoutController(
 		ticketOrder.CustomerName = post.CustomerName;
 		ticketOrder.CompletedAt = clock.GetCurrentInstant();
 		await db.SaveChangesAsync();
-
-		var mailData = new TicketOrderMailData(ticketOrder, Request.GetWebsiteBaseUri());
-		await queue.AddMailToQueueAsync(mailData);
-		
+		var mailItem = new TicketOrderMailItem(ticketOrder.Id, Request.GetWebsiteBaseUri());
+		await queue.AddMailToQueueAsync(mailItem);
 		return RedirectToAction(nameof(Completed), new { id = ticketOrder.Id });
 	}
 

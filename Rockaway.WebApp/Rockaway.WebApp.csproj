@@ -54,7 +54,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
 		<PackageReference Include="MimeKit" Version="4.11.0" />
 		<PackageReference Include="mjml.net" Version="4.8.0" />
 		<PackageReference Include="NodaTime" Version="3.2.2" />

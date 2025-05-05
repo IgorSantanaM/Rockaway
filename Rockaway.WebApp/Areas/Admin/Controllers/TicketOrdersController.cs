@@ -48,6 +48,12 @@ public class TicketOrdersController(
 		};
 		return View(model);
 	}
+	public async Task<IActionResult> ResendFailed() {
+		var orders = await db.TicketOrders.Where(o => o.MailError != null)
+			.Take(10)
+			.ToListAsync();
+		return View(orders);
+	}
 
 	public async Task<IActionResult> Resend(Guid orderId) {
 		var order = await db.TicketOrders
