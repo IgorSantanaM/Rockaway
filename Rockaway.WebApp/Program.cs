@@ -8,12 +8,15 @@ using Rockaway.WebApp.Services.Mail;
 using RazorEngine.Templating;
 using Mjml.Net;
 using QRCoder;
+using Rockaway.WebApp.Areas.Admin.Hubs;
 
 var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Program>();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages(options => options.Conventions.AuthorizeAreaFolder("admin", "/"));
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews(options => {
 	options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
@@ -67,6 +70,8 @@ builder.Services.AddTransient<ITicketMailer, TicketMailer>();
 builder.Services.AddSingleton<IMailQueue, TicketOrderMailQueue>();
 builder.Services.AddHostedService<TicketMailerBackgroundService>();
 
+builder.Services.AddSingleton<IMailDeliveryReporter, SignalRMailDeliveryReporter>();
+
 var app = builder.Build();
 
 if (app.Environment.IsProduction()) {
@@ -95,4 +100,5 @@ app.MapAreaControllerRoute(
 ).RequireAuthorization();
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 app.MapControllers();
+app.MapHub<EmailHub>("/emailhub");
 app.Run();

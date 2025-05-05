@@ -10403,4 +10403,25 @@ div.calendar > div.date > div img.country-flag {
   float: right;
 }
 
+div.resend-failed-emails {
+  height: calc(100vh - 200px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 2.5em 1fr 2.5em 1fr;
+  column-gap: 8px;
+  grid-auto-flow: column;
+}
+div.resend-failed-emails ol, div.resend-failed-emails label {
+  padding: 4px;
+}
+div.resend-failed-emails ol {
+  margin: 0;
+  border: 1px solid #333;
+  overflow-y: scroll;
+}
+div.resend-failed-emails ol li {
+  font-size: 0.8em;
+  margin: 0 0 0 2.5em;
+}
+
 /*# sourceMappingURL=admin.css.map */

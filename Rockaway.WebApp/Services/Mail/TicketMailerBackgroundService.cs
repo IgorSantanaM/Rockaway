@@ -8,7 +8,8 @@ namespace Rockaway.WebApp.Services.Mail {
 		IMailQueue queue,
 		IServiceProvider services,
 		ILogger<TicketMailerBackgroundService> logger,
-		ITicketMailer mailer) : BackgroundService {
+		ITicketMailer mailer,
+		IMailDeliveryReporter reporter) : BackgroundService {
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 			=> await ProcessMailQueue(stoppingToken);
@@ -42,6 +43,7 @@ namespace Rockaway.WebApp.Services.Mail {
 						await mailer.SendOrderConfirmationAsync(mailData, token);
 						order.MailError = null;
 						order.MailSentAt = clock.GetCurrentInstant();
+						await reporter.ReporteSuccessAsync(mailItem.OrderId);
 					}
 					catch (Exception ex) {
 						order.MailError = ex.Message;
@@ -56,6 +58,7 @@ namespace Rockaway.WebApp.Services.Mail {
 				}
 				catch (Exception ex) {
 					logger.LogError(ex, "Error sending tickets  for order {OrderId}.", mailItem.OrderId);
+					await reporter.ReporteFailureAsync(mailItem.OrderId, ex.Message);
 				}
 
 			}
